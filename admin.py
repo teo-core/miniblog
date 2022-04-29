@@ -1,9 +1,28 @@
-from bottle import static_file,route,run,jinja2_view,request,TEMPLATE_PATH
+from bottle import (static_file,
+                    route,
+                    run,
+                    jinja2_view,
+                    request,
+                    redirect, 
+                    TEMPLATE_PATH)
 from settings import STATIC_FILES,TEMPLATES,BD
 from sql import Sql
 from clase_post import Posts
+from datetime import datetime
 
 TEMPLATE_PATH.append(TEMPLATES)
+
+#define function for convert yyyy-mm-dd to dd-mm-yyyy
+# def format_datetime(value, format="%d-%m-%Y"):
+#     if value is None:
+#         return ""
+#     return datetime.strptime(value,"%Y-%m-%d").strftime(format)
+
+# #configured Jinja2 environment with user defined
+# jinja2_template.env.filters['date_format']=format_datetime
+
+
+
 
 def modifica_fecha(lista_tuplas):
     salida = []
@@ -37,11 +56,15 @@ def home():
 @jinja2_view('form_post.html')
 def mi_form(id=None):
     bdatos = Sql(BD)
+    resp = None
     if id:
         resp = bdatos.select(f'SELECT  p.id, p.fecha, p.autor ,p.titulo, p.cuerpo  from posts p where id = {id}')
     
     #resp = modifica_fecha(resp)
-    return {'post' : resp[0]}
+    if resp:
+        return {'post' : resp[0]}
+    else:
+        return {'post': ''}
 
 
 @route('/guardar', method='POST')
@@ -64,9 +87,28 @@ def guardar():
     else:
         resp = bdatos.insert(p)
 
-    return resp
+    redirect('/')
 
+@route('/borrar')
+@route('/borrar/<_id:int>')
+def borrar(_id):
+    p = Posts(id=_id)
+    bdatos = Sql(BD)
+    bdatos.delete(p)
 
+    redirect('/')
+    
+
+@route('/post')
+@route('/post/<id:int>')
+@jinja2_view('form_post.html')
+def ver_post(id=None):
+    if id:
+        bdatos = Sql(BD)
+        resp = bdatos.select(f'select * from posts where id={id}')
+        return {'post' : resp[0]}
+    else:
+        return {'post':None}
 
 
 
