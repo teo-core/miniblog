@@ -1,3 +1,5 @@
+# Ref: https://mmistakes.github.io/so-simple-theme/tags/
+
 from bottle import (static_file,
                     route,
                     run, 
@@ -56,6 +58,12 @@ def ver_post(id):
             'etiquetas':cadena_a_lista(resp[0][5]), 
             'categorias': cadena_a_lista(resp[0][6]) }    
 
+@route('/filtro/<etiqueta>')
+@jinja2_view('index.html')
+def ver_post(etiqueta):
+    bdatos = Sql(BD)
+    resp = bdatos.select(f'SELECT * from posts p WHERE p.etiquetas like "%{etiqueta}%"')
+    return {'posts': resp}
 
 # PARTE DE ADMINISTRACIÓN
 
