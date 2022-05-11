@@ -17,6 +17,34 @@
     <label for="cuerpo">Cuerpo:</label>
     <textarea name="cuerpo" id="cuerpo" cols="30" rows="10">{% if post %}{{post[4]}}{%endif%}</textarea>
     <br>
+    <label for="categorias">Categorías:</label>
+    <input type="text" id="categorias" name="categorias" value="{% if post %}{{post[6]}}{%endif%}"><br><br>
+
+    <label for="etiquetas">Etiquetas:</label>
+    <input type="text" id="etiquetas" name="etiquetas" value="{% if post %}{{post[5]}}{%endif%}"><br><br>    
+    <!-- <div class="column">
+        <h2 class="label">Categorías</h2>
+        <div class="control" required>
+          {%for c in categorias%}
+          <label class="checkbox" for="cat{{c[0]}}">
+            <input  type="checkbox" id="cat{{c[0]}}" name="categoria" 
+            value="{{c[0]}}" {%if (mis_categorias) and c[0] in mis_categorias%}checked{%endif%}>&nbsp;{{c[1]}}
+          </label><br>
+          {%endfor%}
+        </div>
+      </div>
+      <br>
+    <div class="column">
+        <h2 class="label">Etiquetas</h2>
+        <div class="control" required>
+          {%for e in etiquetas%}
+          <label class="checkbox" for="etq{{e[0]}}">
+            <input  type="checkbox" id="etq{{e[0]}}" name="etiqueta" 
+            value="{{e[0]}}" {%if (mis_etiquetas) and e[0] in mis_etiquetas%}checked{%endif%}>&nbsp;{{e[1]}}
+          </label><br>
+          {%endfor%}
+        </div>
+      </div> -->
     <input type="submit" value="Enviar"> <a href="/admin/">Cancelar</a>
 </form>
 {%endblock%}
