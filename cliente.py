@@ -34,6 +34,19 @@ def tupla_a_lista(mi_lista_tuplas):
 def cadena_a_lista(mi_cadena):
     return mi_cadena.split(',')
 
+def conjunto_partes(lista_etq):
+    """
+    recibe la cadena de etiquetas o categorías,
+    la parte con cadena_a_lista y devuelve el conjunto en forma de lista
+    """
+    lista_total = []
+    for etq in lista_etq:
+        lista = cadena_a_lista(etq[0])
+        lista_total += lista
+    return list(set(lista_total))
+    
+
+
 @route('/static/<filename:path>')
 def server_static(filename):
     archivo = static_file(filename, root=STATIC_FILES)
@@ -64,6 +77,15 @@ def ver_post(etiqueta):
     bdatos = Sql(BD)
     resp = bdatos.select(f'SELECT * from posts p WHERE p.etiquetas like "%{etiqueta}%"')
     return {'posts': resp}
+
+@route('/etiquetas')
+@jinja2_view('etiquetas.html')
+def ver_etiquetas():
+    bdatos = Sql(BD)
+    resp = bdatos.select(f'SELECT etiquetas from posts')
+    conjunto = conjunto_partes(resp)
+    return {}    
+
 
 # PARTE DE ADMINISTRACIÓN
 
